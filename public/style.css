@@ -1,0 +1,98 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+.container{
+    width:960px;
+    margin: auto;
+    margin-top:44px;
+}
+
+.fleft{
+    float:left;
+}
+
+.fright{
+    float:right;
+}
+
+.clear{
+    clear:both;
+}
+/* 标头 */
+h1{
+    font-size:22px;
+}
+/* addNew按键 */
+.addNew{
+    padding:2px 9px;
+}
+/*表格宽度*/
+table.list{                     
+    width:100%;
+}
+/* 表格头 */
+table.list th{                  
+    background: #9692c04b;
+    color:#3d042f7e;
+    padding: 9px;
+}
+/* 表格块 */
+
+table.list td{ 
+    background: #8f8e974b;
+    color:#1304077e;                
+    padding: 9px;
+    text-align: center;
+}
+/* 表格行 */
+table.list tr{
+    background: #eeeeee;
+}
+/* 按键 */
+button{
+    padding:2px 9px;
+}
+/* 弹窗 */
+.prompt{
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(0,0,0,0.4); /*背景变暗一点*/
+}
+
+.promptdialog{
+    width:600px;
+    background: #eeeeee;
+    margin: auto;
+    margin-top: 44px;
+}
+
+.prompthead{
+    padding: 6px;
+    background: #1304077e;
+    color: #eeeeee;
+}
+
+.promptbody{
+    /* 弹窗上沿留空 */
+    min-height: 200px;
+    padding: 44px;
+
+}
+/* 关闭弹窗 */
+.close{
+    /* 叉子用红色，让人注意谨慎关闭 */
+    background: #a50e2c7e;
+    padding: 3px 9px;
+    border: none;
+    color:#ffffff;
+}
+
+table.form input, table.form td{
+    box-align: left;
+    padding: 1px;
+}

@@ -1,63 +1,58 @@
 class PeopleController < ApplicationController
-  before_action :set_person, only: [:show, :edit, :update, :destroy]
-
   # GET /people
   # GET /people.json
   def index
     @people = Person.all
+
+    # render - a method provided from Rails Controller, respond
+    # json - describes a format, w/e comes after `json:`, will invoke `.json`
+    render json: @people
   end
 
   # GET /people/1
   # GET /people/1.json
   def show
-  end
-
-  # GET /people/new
-  def new
-    @person = Person.new
-  end
-
-  # GET /people/1/edit
-  def edit
+    render json: {name: 'is me'}
   end
 
   # POST /people
   # POST /people.json
   def create
-    @person = Person.new(person_params)
-
-    respond_to do |format|
-      if @person.save
-        format.html { redirect_to @person, notice: 'Person was successfully created.' }
-        format.json { render :show, status: :created, location: @person }
-      else
-        format.html { render :new }
-        format.json { render json: @person.errors, status: :unprocessable_entity }
-      end
+    # binding.pry
+    person = Person.create(white_listed_params)
+    if person.save
+      render json: {success: true}
+    else
+      render json: {}, status: 400
     end
   end
 
   # PATCH/PUT /people/1
   # PATCH/PUT /people/1.json
   def update
-    respond_to do |format|
-      if @person.update(person_params)
-        format.html { redirect_to @person, notice: 'Person was successfully updated.' }
-        format.json { render :show, status: :ok, location: @person }
-      else
-        format.html { render :edit }
-        format.json { render json: @person.errors, status: :unprocessable_entity }
-      end
+    found_person = Person.find(white_listed_user_id)
+
+    if !found_person
+      render json: {}, status: 404
+    end
+
+    found_person.update_attributes(white_listed_params)
+    
+    if found_person.save
+      render json: {success: true}
+    else
+      render json: {}, status: 400
     end
   end
 
   # DELETE /people/1
   # DELETE /people/1.json
   def destroy
-    @person.destroy
-    respond_to do |format|
-      format.html { redirect_to people_url, notice: 'Person was successfully destroyed.' }
-      format.json { head :no_content }
+    person = Person.find(white_listed_user_id)
+    if person.destroy!                
+      render json: { success: true}
+    else
+      render json: {}, status: 400
     end
   end
 
@@ -70,5 +65,14 @@ class PeopleController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def person_params
       params.require(:person).permit(:name, :company, :title, :gender, :education)
+    end
+  
+    # @param - { key: value }
+    def white_listed_params
+      params.permit(:education, :name, :gender, :title, :company) 
+    end
+
+    def white_listed_user_id
+      params.permit(:id)[:id]
     end
 end

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Beautiful CRUD grid using Vue, php, mysql</title>
+  <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body>
+  <div id="root">
+    <div class="container">
+      <h1 class="fleft"> List of Employee </h1>
+      <!-- 点击按键使得变量showingAddPrompt变为真，就会实现弹窗的效果 -->
+      <button class="fright addNew" @click="showingAddPrompt=true;"> Add New</button>
+      <div class="clear"> </div>
+      <hr/>
+      <table class="list">
+        <!-- 表格头   -->
+        <tr>
+          <!-- <th>ID</th> -->
+          <th>Name</th>
+          <th>Title</th>
+          <th>Company</th>
+          <th>Education</th>
+          <th>Gender</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+        <!-- 表格体 -->
+        <tr v-for="user in users">
+          <!-- <td>{{user.id}}</td> -->
+          <td>{{user.name}}</td>
+          <td>{{user.title}}</td>
+          <td>{{user.company}}</td>
+          <td>{{user.education}}</td>
+          <td>{{user.gender}}</td>
+          <td>
+            <button @click="editUser(user)">Edit</button>
+          </td>
+          <td>
+            <button @click="userToBeDeleted = user;showingDeletePrompt=true">Delete</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="prompt" id="addPrompt" v-if="showingAddPrompt">
+      <div class="promptdialog">
+        <div class="prompthead">
+          <p class="fleft">Add New User</p>
+          <button class="fright close" @click="showingAddPrompt=false;">X</button>
+          <!--我常犯的错误是把这里的分号和引号打反-->
+          <div class="clear"></div>
+        </div>
+        <div class="promptbody">
+          <table class="form">
+            <tr>
+              <th>Name</th>
+              <th>:</th>
+              <!--这样分开来写有利于：对齐-->
+              <td>
+                <input type="text" name="">
+              </td>
+            </tr>
+            <tr>
+              <th>Title</th>
+              <th>:</th>
+              <td>
+                <input type="text" name="">
+              </td>
+            </tr>
+            <tr>
+              <th>Company</th>
+              <th>:</th>
+              <td>
+                <input type="text" name="">
+              </td>
+            </tr>
+            <tr>
+              <th>Education</th>
+              <th>:</th>
+              <td>
+                <input type="text" name="">
+              </td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <th>:</th>
+              <td>
+                <input type="text" name="">
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <td>
+                <button @click="showingAddPrompt=false;">Save User</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="prompt" id="addPrompt" v-if="showingAddPrompt">
+      <div class="promptdialog">
+        <div class="prompthead">
+          <p class="fleft">Add New User</p>
+          <button class="fright close" @click="showingAddPrompt=false;">X</button>
+          <!--我常犯的错误是把这里的分号和引号打反-->
+          <div class="clear"></div>
+        </div>
+
+        <div class="promptbody">
+          <table class="form">
+            <tr>
+              <th>Name</th>
+              <th>:</th>
+              
+              <td>
+                <input type="text" v-model="newUserForm.name">
+              </td>
+            </tr>
+            <tr>
+              <th>Title</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="newUserForm.title">
+              </td>
+            </tr>
+            <tr>
+              <th>Company</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="newUserForm.company">
+              </td>
+            </tr>
+            <tr>
+              <th>Education</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="newUserForm.education">
+              </td>
+            </tr>
+            <tr>
+              
+              <th>Gender</th>
+              <th>:</th>
+              <td>
+                <select v-model="newUserForm.gender">
+                  <option type="text" value="Male">Male</option>
+                  <option type="text" value="Female">Female</option>
+                </select>
+                
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              
+              <td>
+                <button @click="createNewUser()">Save User</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO: 也许可以把 更改 和 创建 用同一个模板 -->
+    <div class="prompt" id="editPrompt" v-if="showingEditPrompt">
+      <div class="promptdialog">
+        <div class="prompthead">
+          <p class="fleft">Edit User</p>
+          <button class="fright close" @click="showingEditPrompt=false;">X</button>
+          
+          <div class="clear"></div>
+        </div>
+        <div class="promptbody">
+          <table class="form">
+            <tr>
+              <th>Name</th>
+              <th>:</th>
+              
+              <td>
+                <input type="text" v-model="updateUserForm.name">
+              </td>
+            </tr>
+            <tr>
+              <th>Title</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="updateUserForm.title">
+              </td>
+            </tr>
+            <tr>
+              <th>Company</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="updateUserForm.company">
+              </td>
+            </tr>
+            <tr>
+              <th>Education</th>
+              <th>:</th>
+              <td>
+                <input type="text" v-model="updateUserForm.education">
+              </td>
+
+            </tr>
+            <tr>
+              
+              <th>Gender</th>
+              <th>:</th>
+              <td>
+                <select v-model="updateUserForm.gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <td>
+                <button @click="updateUser()">Save User</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="prompt" id="deletePrompt" v-if="showingDeletePrompt">
+      <div class="promptdialog">
+        <div class="prompthead">
+          <p class="fleft">Delete User</p>
+          <button class="fright close" @click="showingDeletePrompt=false;">X</button>
+          
+          <div class="clear"></div>
+        </div>
+        <div class="promptbody">
+          <p>Are you sure you want to delete ?</p>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <button @click="deleteUser()">Yes</button>
+          <button @click="showingDeletePrompt=false;">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="vue.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</body>
+
+</html>
