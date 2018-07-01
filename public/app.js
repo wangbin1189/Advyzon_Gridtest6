@@ -3,11 +3,16 @@ const headers = new Headers({
   'Accept': 'application/json'
 });
 
-const index_user = () => {                   
-  return fetch("/people").then(response => {  
+const index_user = (gotoPage) => {                   
+  // people?page=1
+  const url = "/people" + "?page=" + gotoPage;
+  return fetch(url).then(response => {  
     return response.json();                  
   });
 };
+
+// for order by
+// fetch('/people?order_by=name') // in rails, `params[:order_by]`
 
 const create_user = function (userParam) {
   return fetch("/people", {
@@ -31,10 +36,16 @@ const delete_user = userId => {
   }); // TODO: 读取保存后的用户信息
 };
 
+// 1 to n
+const expand = n => [...Array(n).keys()].map(n => n + 1)
+
 var app = new Vue({              
   el: "#root",                    
   data: {                         
     users: [],
+    currentPage: 0,
+    totalPages: 0,
+    allPages: [],
 
     showingAddPrompt: false,
     newUserForm: {               
@@ -67,9 +78,15 @@ var app = new Vue({
       });
     },
 
-    indexUsers() {                   
-      index_user().then(userData => {
-        this.users = userData;
+    indexUsers(gotoPage = 1) {                   
+      index_user(gotoPage).then(userData => {
+        var results = userData.results;
+        var totalPages = userData.totalPages;
+        var currentPage = userData.currentPage;
+        this.users = results;
+        this.totalPages = totalPages;
+        this.allPages = expand(totalPages);
+        this.currentPage = currentPage;
       });
     },
 
@@ -97,5 +114,3 @@ var app = new Vue({
     this.indexUsers();
   }
 });
-
-

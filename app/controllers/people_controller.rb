@@ -2,11 +2,16 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.json
   def index
-    @people = Person.all
-
-    # render - a method provided from Rails Controller, respond
-    # json - describes a format, w/e comes after `json:`, will invoke `.json`
-    render json: @people
+    # @people = @people.order(params[:order_by])
+    white_listed_current_page = params.permit(:page)[:page]
+    @people = Person.page(white_listed_current_page || 1)
+    render(
+      json: { 
+        results: @people,
+        currentPage: @people.current_page,
+        totalPages: @people.total_pages
+      }
+    )
   end
 
   # GET /people/1

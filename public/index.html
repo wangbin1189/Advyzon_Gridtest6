@@ -18,7 +18,9 @@
         <!-- 表格头   -->
         <tr>
           <!-- <th>ID</th> -->
-          <th>Name</th>
+           <!-- <th><a href="name">Name</a></th>
+          <th>Name</th> -->
+          <th>Name</th>  
           <th>Title</th>
           <th>Company</th>
           <th>Education</th>
@@ -42,6 +44,13 @@
           </td>
         </tr>
       </table>
+      <div style="text-align: center;">
+        <button v-for="page in allPages" @click="indexUsers(page)"
+          v-bind:style="{ backgroundColor: page === currentPage ? '#8cc' : ''}"
+        >
+          {{ page }}
+        </button>
+      </div>
     </div>
     <div class="prompt" id="addPrompt" v-if="showingAddPrompt">
       <div class="promptdialog">
