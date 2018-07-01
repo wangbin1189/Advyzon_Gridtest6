@@ -3,9 +3,9 @@ const headers = new Headers({
   'Accept': 'application/json'
 });
 
-const index_user = (gotoPage) => {                   
+const index_user = ({ page = 1, sortBy = 'name' }) => {                   
   // people?page=1
-  const url = "/people" + "?page=" + gotoPage;
+  const url = "/people" + "?page=" + page + "&sortBy=" + sortBy;
   return fetch(url).then(response => {  
     return response.json();                  
   });
@@ -46,6 +46,7 @@ var app = new Vue({
     currentPage: 0,
     totalPages: 0,
     allPages: [],
+    sortBy: '',
 
     showingAddPrompt: false,
     newUserForm: {               
@@ -78,15 +79,20 @@ var app = new Vue({
       });
     },
 
-    indexUsers(gotoPage = 1) {                   
-      index_user(gotoPage).then(userData => {
+    indexUsers(options = {}) {                   
+      index_user(options).then(userData => {
         var results = userData.results;
         var totalPages = userData.totalPages;
         var currentPage = userData.currentPage;
+        debugger
+        var sortBy = userData.sortBy;
+
+
         this.users = results;
         this.totalPages = totalPages;
         this.allPages = expand(totalPages);
         this.currentPage = currentPage;
+        this.sortBy = sortBy;
       });
     },
 
@@ -114,3 +120,5 @@ var app = new Vue({
     this.indexUsers();
   }
 });
+
+window.app = app;

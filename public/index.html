@@ -20,12 +20,22 @@
           <!-- <th>ID</th> -->
            <!-- <th><a href="name">Name</a></th>
           <th>Name</th> -->
-          <th>Name</th>  
-          <th>Title</th>
-          <th>Company</th>
-          <th>Education</th>
-          <th>Gender</th>
-          <th>Edit</th>
+          <th @click="indexUsers({ sortBy: 'name' })">
+            Name {{ sortBy === 'name' ? '(v)' : ''}}
+          </th>  
+          <th @click="indexUsers({ sortBy: 'title' })">
+            Title {{ sortBy === 'title' ? '(v)' : ''}}
+          </th>
+          <th @click="indexUsers({ sortBy: 'company' })">
+            Company  {{ sortBy === 'company' ? '(v)' : ''}}
+          </th>
+          <th @click="indexUsers({ sortBy: 'education' })">
+            Education  {{ sortBy === 'education' ? '(v)' : ''}}
+          </th>
+          <th @click="indexUsers({ sortBy: 'gender' })">
+            Gender  {{ sortBy === 'gender' ? '(v)' : ''}}
+          </th>
+          <th >Edit</th>
           <th>Delete</th>
         </tr>
         <!-- 表格体 -->
@@ -45,7 +55,7 @@
         </tr>
       </table>
       <div style="text-align: center;">
-        <button v-for="page in allPages" @click="indexUsers(page)"
+        <button v-for="page in allPages" @click="indexUsers({ page: page })"
           v-bind:style="{ backgroundColor: page === currentPage ? '#8cc' : ''}"
         >
           {{ page }}

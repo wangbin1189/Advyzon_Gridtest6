@@ -4,12 +4,16 @@ class PeopleController < ApplicationController
   def index
     # @people = @people.order(params[:order_by])
     white_listed_current_page = params.permit(:page)[:page]
-    @people = Person.page(white_listed_current_page || 1)
+    white_listed_sort_by = params.permit(:sortBy)[:sortBy] || :name
+    @people = Person
+      .order(white_listed_sort_by)
+      .page(white_listed_current_page || 1)
     render(
       json: { 
         results: @people,
         currentPage: @people.current_page,
-        totalPages: @people.total_pages
+        totalPages: @people.total_pages,
+        sortBy: white_listed_sort_by
       }
     )
   end
